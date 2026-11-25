@@ -1,0 +1,305 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | Enrollment System</title>
+    <link rel="stylesheet" href="{% static 'students/style.css' %}">
+</head>
+<body>
+
+<header class="header">
+    <div class="brand">LDD Enrollment System</div>
+    <span>Administrator</span>
+</header>
+
+<main class="container">
+
+    <a href="{% url 'students:student_list' %}" class="back-link">
+        &larr; Back to Student Directory
+    </a>
+
+    <!-- Profile Header -->
+    <section class="profile-header card">
+
+        <div class="avatar">
+            {{ student.first_name|first|upper }}{{ student.last_name|first|upper }}
+        </div>
+
+        <div>
+            <h1>{{ student.full_name }}</h1>
+            <p>{{ student.student_id }}</p>
+
+            {% if current_enrollment %}
+                <span class="student-tag">
+                    {{ student.course }} | {{ current_enrollment.section }}
+                </span>
+            {% else %}
+                <span class="student-tag">
+                    No Current Enrollment
+                </span>
+            {% endif %}
+        </div>
+
+    </section>
+
+    <!-- Personal Information -->
+    <section class="card info-card">
+
+        <h2>Personal Information</h2>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <label>First Name</label>
+                <p>{{ student.first_name }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Middle Name</label>
+                <p>{{ student.middle_name|default:"Not provided" }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Last Name</label>
+                <p>{{ student.last_name }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Birth Date</label>
+                <p>{{ student.birth_date|date:"F d, Y" }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Gender</label>
+                <p>{{ student.gender }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Nationality</label>
+                <p>{{ student.nationality }}</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Contact Information -->
+    <section class="card info-card">
+
+        <h2>Contact Information</h2>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <label>Email Address</label>
+                <p>{{ student.email }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Phone Number</label>
+                <p>{{ student.phone_number }}</p>
+            </div>
+
+            <div class="info-item full-width">
+                <label>Home Address</label>
+                <p>{{ student.address }}</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Academic Background -->
+    <section class="card info-card">
+
+        <h2>Academic Background</h2>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <label>Student ID</label>
+                <p>{{ student.student_id }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Course</label>
+                <p>{{ student.course }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Admission Date</label>
+                <p>{{ student.admission_date|date:"F d, Y" }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Previous School</label>
+                <p>{{ student.previous_school }}</p>
+            </div>
+
+            <div class="info-item full-width">
+                <label>Educational Background</label>
+                <p>{{ student.educational_background|default:"Not provided" }}</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Guardian Information -->
+    <section class="card info-card">
+
+        <h2>Guardian Information</h2>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <label>Guardian Name</label>
+                <p>{{ student.guardian_name }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Relationship</label>
+                <p>{{ student.guardian_relationship }}</p>
+            </div>
+
+            <div class="info-item">
+                <label>Guardian Contact</label>
+                <p>{{ student.guardian_contact }}</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Current Enrollment -->
+    <section class="card info-card">
+
+        <h2>Current Enrollment</h2>
+
+        {% if current_enrollment %}
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <label>Academic Year</label>
+                    <p>{{ current_enrollment.academic_year }}</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Semester</label>
+                    <p>{{ current_enrollment.semester }}</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Year Level</label>
+                    <p>{{ current_enrollment.year_level }}</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Section</label>
+                    <p>{{ current_enrollment.section }}</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Application Date</label>
+                    <p>{{ current_enrollment.application_date|date:"F d, Y" }}</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Enrollment Date</label>
+                    <p>
+                        {% if current_enrollment.enrollment_date %}
+                            {{ current_enrollment.enrollment_date|date:"F d, Y" }}
+                        {% else %}
+                            Not yet enrolled
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <label>Enrollment Status</label>
+                    <p>
+                        <span class="status status-{{ current_enrollment.status|lower|cut:' ' }}">
+                            {{ current_enrollment.status }}
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <p class="empty-message">
+                No enrollment record found for the current academic period.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+    <!-- Enrollment History -->
+    <section class="card info-card">
+
+        <h2>Enrollment History</h2>
+
+        <p class="section-description">
+            Previous and current enrollment records of the student.
+        </p>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Academic Year</th>
+                        <th>Semester</th>
+                        <th>Year Level</th>
+                        <th>Section</th>
+                        <th>Application Date</th>
+                        <th>Enrollment Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.academic_year }}</td>
+                        <td>{{ enrollment.semester }}</td>
+                        <td>{{ enrollment.year_level }}</td>
+                        <td>{{ enrollment.section }}</td>
+                        <td>{{ enrollment.application_date|date:"M d, Y" }}</td>
+
+                        <td>
+                            {% if enrollment.enrollment_date %}
+                                {{ enrollment.enrollment_date|date:"M d, Y" }}
+                            {% else %}
+                                Not yet enrolled
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="status status-{{ enrollment.status|lower|cut:' ' }}">
+                                {{ enrollment.status }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty">
+                            No enrollment history available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>
